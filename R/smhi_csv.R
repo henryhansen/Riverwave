@@ -1,15 +1,11 @@
-
-# Load Packages -----------------------------------------------------------
-
-library(RCurl)
-
 # API Request -------------------------------------------------------------
 
 #Example of a single api data request in csv
 # https://opendata-download-hydroobs.smhi.se/api/version/latest/parameter/1/station/2357/period/corrected-archive/data.csv
 
-smhi_csv <- function(stationID, version = "latest", parameter = "1", period = "corrected-archive", direc=NA) {
+smhi_csv <- function(stationID, direc=NA, version = "latest", parameter = "1", period = "corrected-archive") {
     #API information: https://opendata.smhi.se/apidocs/hydroobs/index.html
+    library(RCurl)
 
     base_URL <- "https://opendata-download-hydroobs.smhi.se/api" #base url for api request
     call <- paste0(base_URL,  #concatenated string to pull unique csv
