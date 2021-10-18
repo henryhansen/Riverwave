@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^test-document\.Rmd$
+^test-document\.html$
+^system-setup\.R$
