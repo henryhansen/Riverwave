@@ -6,55 +6,39 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of Riverwave is to …
+The goal of Riverwave is to transform standard gauge station data into
+relevant ecological theory to foster understanding of river behavior.
 
 ## Installation
 
-You can install the released version of Riverwave from github
-
-``` r
-install.packages("Riverwave")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can install the development version from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("henryhansen/Riverwave")
 ```
 
-## Example
+## Example gauge station download
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to download some gauge
+station data from SMHI:
 
 ``` r
 library(Riverwave)
-## basic example code
+## basic example
+head(Riverwave::smhi_csv(274))
+#> [1] "EDEBÄCK_274"
+#>   Datum (svensk sommartid) Vattenföring Kvalitet
+#> 1               1910-01-01           70        G
+#> 2               1910-01-02           70        G
+#> 3               1910-01-03           70        G
+#> 4               1910-01-04           69        G
+#> 5               1910-01-05           69        G
+#> 6               1910-01-06           69        G
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN. adding a line
+The visualization concept for this package follows the idea presented in
+the [riverwave
+paper](https://academic.oup.com/bioscience/article/64/10/870/1780369):
+![riverwave-concept](images/Riverwave_concept.jpg)
