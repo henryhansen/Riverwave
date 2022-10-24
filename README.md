@@ -10,8 +10,7 @@ The goal of Riverwave is to …
 
 ## Installation
 
-You can install the released version of Riverwave from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the released version of Riverwave from github
 
 ``` r
 install.packages("Riverwave")
@@ -58,4 +57,4 @@ You can also embed plots, for example:
 <img src="man/figures/README-pressure-1.png" width="100%" />
 
 In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+files, so they display on GitHub and CRAN. adding a line
