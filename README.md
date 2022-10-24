@@ -43,7 +43,7 @@ the [riverwave
 paper](https://academic.oup.com/bioscience/article/64/10/870/1780369):
 ![riverwave-concept](images/Riverwave_concept.jpg)
 
-``` plantuml
+```PlantUML
 @startuml
 
 SMHI : Date

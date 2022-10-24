@@ -41,7 +41,7 @@ head(Riverwave::smhi_csv(274))
 The visualization concept for this package follows the idea presented in the [riverwave paper](https://academic.oup.com/bioscience/article/64/10/870/1780369):
 ![riverwave-concept](images/Riverwave_concept.jpg)
 
-```PlantUML
+```{PlantUML}
 @startuml
 
 SMHI : Date
