@@ -42,3 +42,26 @@ The visualization concept for this package follows the idea presented in
 the [riverwave
 paper](https://academic.oup.com/bioscience/article/64/10/870/1780369):
 ![riverwave-concept](images/Riverwave_concept.jpg)
+
+``` plantuml
+@startuml
+
+SMHI : Date
+SMHI : Discharge
+SMHI : Quality
+
+SMHI -> Riverwave
+Riverwave --> [*]
+Riverwave : Calculations
+Riverwave : Conversions
+Riverwave : Estimation
+
+Riverwave -> Riverwave_Shiny
+Riverwave_Shiny : Mapping
+Riverwave_Shiny : Visualization
+Riverwave_Shiny : Reports
+
+Riverwave_Shiny --> [*]
+
+@enduml
+```
