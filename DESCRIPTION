@@ -15,4 +15,10 @@ Config/testthat/edition: 3
 Imports: 
     RCurl,
     utils,
-    r2d3
+    r2d3,
+    httr,
+    dplyr,
+    jsonify,
+    geojsonio,
+    mapview,
+    readxl
