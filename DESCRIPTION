@@ -17,4 +17,10 @@ Imports:
     utils,
     r2d3,
     lubridate,
-    tidyverse
+    tidyverse,
+    httr,
+    dplyr,
+    jsonify,
+    geojsonio,
+    mapview,
+    readxl
