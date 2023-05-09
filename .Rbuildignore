@@ -5,3 +5,5 @@
 ^test-document\.Rmd$
 ^test-document\.html$
 ^system-setup\.R$
+^R/riverwave_plot\.R$
+^R/riverwave_report\.Rmd$
