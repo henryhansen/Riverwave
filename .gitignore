@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 system-setup.R
+d3/
+other_documentation/
+R/old_files/
