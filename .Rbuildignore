@@ -7,3 +7,8 @@
 ^system-setup\.R$
 ^R/riverwave_plot\.R$
 ^R/riverwave_report\.Rmd$
+^R/old_files$
+
+^R/helper_functions\.R$
+^R/bayes_flood_plots\.R$
+^R/bayes_flood_freq\.R$
