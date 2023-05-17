@@ -88,7 +88,7 @@ data <- data %>% dplyr::mutate(date = lubridate::as_date(date))
 #'
 #' @return A data.frame
 #' @export
-#'
+#' @importFrom dplyr "%>%"
 #' @examples {
 #'
 #' ellinge_vatten <- smhi_vatten(1132)
@@ -98,14 +98,6 @@ data <- data %>% dplyr::mutate(date = lubridate::as_date(date))
 smhi_vatten <- function(stn_nos){
     stn_data <- sapply(stn_nos, smhi_vatten_data)
     return(stn_data)
-}
-
-# stns <- test[1:10,2] %>% st_drop_geometry()
-all_data <- list()
-for (i in 1:5) {
-    inv_df <- inv %>% st_drop_geometry()
-    temp <- smhi_vatten_data(inv_df[i,2])
-    all_data[i]
 }
 
 

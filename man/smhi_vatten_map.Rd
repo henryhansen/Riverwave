@@ -4,7 +4,10 @@
 \alias{smhi_vatten_map}
 \title{SMHI Vatten Map}
 \usage{
-smhi_vatten_map()
+smhi_vatten_map(smhi_vatten_inv)
+}
+\arguments{
+\item{smhi_vatten_inv}{dataframe of gauge inventory from smhi_vatten_inv}
 }
 \value{
 A leaflet map.

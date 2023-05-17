@@ -2,4 +2,6 @@
 
 export(smhi_csv)
 export(smhi_vatten)
+export(smhi_vatten_data)
 export(smhi_vatten_map)
+importFrom(dplyr,"%>%")
