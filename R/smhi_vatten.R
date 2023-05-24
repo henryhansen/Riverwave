@@ -1,7 +1,7 @@
 #' SMHI Gauge Inventory
 #'
 #' @return dataframe of gauge inventory
-#'
+#' @export
 #'
 #'
 #'
@@ -96,7 +96,7 @@ data <- data %>% dplyr::mutate(date = lubridate::as_date(date))
 #' }
 #'
 smhi_vatten <- function(stn_nos){
-    stn_data <- sapply(stn_nos, smhi_vatten_data)
+    stn_data <- lapply(stn_nos, smhi_vatten_data)
     return(stn_data)
 }
 
