@@ -1,6 +1,7 @@
 #' SMHI Gauge Inventory
 #'
 #' @return dataframe of gauge inventory
+#' @importFrom magrittr "%>%"
 #' @export
 #'
 #'
@@ -32,7 +33,6 @@ smhi_vatten_inv <- function(){
 #' @return A leaflet map.
 #' @export
 #'
-#'
 smhi_vatten_map <- function(smhi_vatten_inv){
 
 mapview::mapview(smhi_vatten_inv)
@@ -47,12 +47,7 @@ mapview::mapview(smhi_vatten_inv)
 #'
 #' @return A data.frame
 #' @export
-#'
-#' @examples {
-#'
-#' ellinge_vatten <- smhi_vatten(1132)
-#'
-#' }
+#' @examples
 #'
 smhi_vatten_data <- function(stn_no){
 
@@ -81,6 +76,19 @@ data <- data %>% dplyr::mutate(date = lubridate::as_date(date))
 }
 
 
+#' Title
+#'
+#' @param inv dataframe of smhi inventory
+#'
+#' @return station numbers currently monitored
+#' @export
+#' @examples
+#'
+smhi_vatten_current <- function(inv) {
+    latest <- Sys.Date()-1
+    index <- which(inv$DataTo >= latest)
+    return(sf::st_drop_geometry(inv[index,"Stnno"]))
+}
 
 #' Get all data from SMHI Vatten
 #'
@@ -88,16 +96,12 @@ data <- data %>% dplyr::mutate(date = lubridate::as_date(date))
 #'
 #' @return A data.frame
 #' @export
-#' @importFrom dplyr "%>%"
-#' @examples {
+#' @examples
 #'
-#' ellinge_vatten <- smhi_vatten(1132)
-#'
-#' }
-#'
-smhi_vatten <- function(stn_nos){
-    stn_data <- lapply(stn_nos, smhi_vatten_data)
+smhi_vatten_retrieve <- function(stn_nos){
+    stn_data <- apply(stn_nos, 1, FUN = smhi_vatten_data)
     return(stn_data)
 }
+
 
 

@@ -9,6 +9,9 @@ excd(gaugedata, discharge, constant)
 \arguments{
 \item{constant}{}
 }
+\value{
+exceedence table
+}
 \description{
 Title
 }
