@@ -23,4 +23,6 @@ Imports:
     geojsonio,
     mapview,
     readxl,
-    magrittr
+    magrittr,
+    rlang
+
