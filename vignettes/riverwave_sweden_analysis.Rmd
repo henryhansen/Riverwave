@@ -1,0 +1,32 @@
+---
+title: "Sweden Analysis"
+author: "Henry H. Hansen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(Riverwave)
+```
+
+# Downloading Data
+
+Here we want to download data from Sweden's Gauge station network. We can do this
+with the `smhi_vatten_data` function. But first we want to look at the available guage stations with the `smhi_vatten_inv` function.
+
+```{r}
+smhi_inv <- smhi_vatten_inv() #load inventory
+
+head(smhi_inv) #look at inventory data
+```
+
+Here we see all the gauge stations and their associated information. For our study.

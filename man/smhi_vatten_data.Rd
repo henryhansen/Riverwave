@@ -15,11 +15,3 @@ A data.frame
 \description{
 Get SMHI Vatten
 }
-\examples{
-{
-
-ellinge_vatten <- smhi_vatten(1132)
-
-}
-
-}
