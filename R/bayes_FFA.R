@@ -22,6 +22,9 @@ floo <- function(smhidata) {
         dplyr::distinct("vattenforing_m3_s", .keep_all = T) %>%
         dplyr:: filter("vattenforing_m3_s" == max("vattenforing_m3_s"))
 
+    #drop last column
+    gaugedata <- gaugedata[1:(length(gaugedata)-1)]
+
     #return final dataset
     return(gaugedata)
 }
@@ -37,18 +40,34 @@ floo <- function(smhidata) {
 #' @export
 #'
 #' @examples
-excd <- function(gaugedata, discharge, constant) {
+#'
+
+excd <- function(gaugedata, discharge = "vattenforing_m3_s", constant = 0.3) {
     #rename for convenience
     df <- gaugedata
 
     #assign length of dataframe
     N <- nrow(df)
 
-    #assign frequency factor constant
+        #assign frequency factor constant
     a <- constant
 
     # assign ranks to discharges
-    df$ranks <- rank(-df[,discharge])
+    if (is.numeric(df[,discharge])) {
+        dis <- df[,discharge]
+        dis <- dis * -1
+        df$ranks <- rank(dis)
+        attr(df$ranks, "names") <- NULL
+    } else {
+        index <- df[discharge] == "Saknas" | is.na(df[discharge])
+        df[index, "vattenforing_m3_s"] <- NA
+        df$vattenforing_m3_s_d <- as.double(df$vattenforing_m3_s)
+        dis <- df$vattenforing_m3_s_d
+        dis <- dis * -1
+        df$ranks <- rank(dis, na.last = F)
+        attr(df$ranks, "names") <- NULL
+    }
+
 
     #calculate Gringorten plotting position formula
     # df$qi <- sapply(df$ranks, function(i) (i - a) / (N + 1 - (2*a)))

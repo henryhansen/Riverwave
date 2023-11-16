@@ -22,4 +22,5 @@ Imports:
     jsonify,
     geojsonio,
     mapview,
-    readxl
+    readxl,
+    magrittr
