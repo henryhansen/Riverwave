@@ -22,4 +22,10 @@ Imports:
     geojsonio,
     mapview,
     readxl,
-    rlang
+    rlang,
+    ggplot2,
+    lubridate,
+    scales,
+    purrr
+Suggest:
+    ggfx
