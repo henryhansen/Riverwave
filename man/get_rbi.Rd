@@ -4,12 +4,12 @@
 \alias{get_rbi}
 \title{Richards-Baker Flashiness index (RBI)}
 \usage{
-get_rbi(data, flow_var, ...)
+get_rbi(data, value_name, ...)
 }
 \arguments{
 \item{data}{A daily value data.frame.}
 
-\item{flow_var}{A column name for flow, e.g. Flow.}
+\item{value_name}{One unquoted expression for flow column name, e.g. vettenforing_m3_s}
 
 \item{...}{values to pass to `dplyr::group_by()` to perform RBI calculation on. (optional)}
 }
