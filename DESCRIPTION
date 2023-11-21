@@ -16,6 +16,7 @@ Imports:
     RCurl,
     utils,
     r2d3,
+    lubridate,
     httr,
     dplyr,
     jsonify,
@@ -29,3 +30,6 @@ Imports:
     purrr
 Suggest:
     ggfx
+    magrittr,
+    rlang
+

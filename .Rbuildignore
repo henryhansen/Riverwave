@@ -5,3 +5,6 @@
 ^test-document\.Rmd$
 ^test-document\.html$
 ^system-setup\.R$
+^bayes_flood_plots\.R$
+^bayes_flood_freq\.R$
+^helper_functions\.R$

@@ -42,6 +42,9 @@ smhi_csv <- function(stationID, direc = NA, version = "latest", parameter = "1",
     "/period/", period, # period part to string
     "/data.csv"
   )
+
+  print(call)
+
   csv <- RCurl::getURL(call) # call to get the csv
 
   # grab the station details
