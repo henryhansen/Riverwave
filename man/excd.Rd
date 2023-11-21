@@ -4,7 +4,7 @@
 \alias{excd}
 \title{Title}
 \usage{
-excd(gaugedata, discharge, constant)
+excd(gaugedata, discharge = "vattenforing_m3_s", constant = 0.3)
 }
 \arguments{
 \item{constant}{}
