@@ -23,6 +23,13 @@ Imports:
     geojsonio,
     mapview,
     readxl,
+    rlang,
+    ggplot2,
+    lubridate,
+    scales,
+    purrr
+Suggest:
+    ggfx
     magrittr,
     rlang
 
