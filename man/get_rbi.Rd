@@ -25,4 +25,5 @@ The user must specify the `flow_var` column but it's optional whether to use `dp
 \examples{
 stream_flow <- data.frame(flow = c(seq(30, 60), seq(60, 30, length.out = 60)))
 stream_flow \%>\% get_rbi(flow)
+
 }

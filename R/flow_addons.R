@@ -13,6 +13,7 @@
 #' @examples
 #' stream_flow <- data.frame(flow = c(seq(30, 60), seq(60, 30, length.out = 60)))
 #' stream_flow %>% get_rbi(flow)
+#'
 get_rbi <- function(data, value_name, ...) {
 
     data %>%
@@ -50,7 +51,7 @@ FF_LogNormal <- function(m, s, p) {
 
     #return q100
     return(qvalue)
-
+}
 
 #' Prepping Flow Data
 #'

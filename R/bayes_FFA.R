@@ -10,20 +10,14 @@ floo <- function(smhidata) {
     # add year column based on dates
     smhidata$year <- lubridate::year(lubridate::ymd(smhidata$date))
 
-    #add date column based on swedish dates
-    smhidata$date <- lubridate::ymd(smhidata$date)
-
     #add julian day based on dates
-    smhidata$yday <- lubridate::yday(smhidata$date)
+    smhidata$yday <- lubridate::yday(lubridate::ymd(smhidata$date))
 
     #grab only max discharge for each year
     gaugedata <- smhidata %>%
         dplyr::group_by(year) %>%
-        dplyr::distinct("vattenforing_m3_s", .keep_all = T) %>%
-        dplyr:: filter("vattenforing_m3_s" == max("vattenforing_m3_s"))
-
-    #drop last column
-    gaugedata <- gaugedata[1:(length(gaugedata)-1)]
+        dplyr::distinct(vattenforing_m3_s, .keep_all = T) %>%
+        dplyr:: filter(vattenforing_m3_s == max(vattenforing_m3_s))
 
     #return final dataset
     return(gaugedata)
