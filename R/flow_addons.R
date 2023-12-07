@@ -55,13 +55,14 @@ FF_LogNormal <- function(m, s, p) {
 
 #' Prepping Flow Data
 #'
-#' @param data A data.frame with date and flow columns
+#' @param data A data.frame with date and flow columns.
+#' @param value_name One unquoted expression for flow column name, e.g. vettenforing_m3_s.
 #' @param wy_month A numeric for what month to use as start of water year, 10 (default).
 #'
-#' @return
+#' @return A \code{tibble} with original data and added date columns.
 #' @export
 #'
-#' @note In data.frame `date` column must be named `date`.
+#' @note In data.frame or \code{tibble} `date` column must be named `date`.
 #' @examples
 prep_flow <- function(data, value_name = vattenforing_m3_s, wy_month = 10){
 
@@ -182,4 +183,60 @@ add_proportion <- function(data, value_name) {
                                     list(max_prop = ~.x/max(.x, na.rm = TRUE)
                                     ))) %>%
         dplyr::ungroup()
+}
+
+
+#' Get DOY Summary Stats
+#'
+#' @param data A data.frame with date and flow columns.
+#' @param value_name One unquoted expression for flow column name, e.g. vettenforing_m3_s.
+#' @param wy_month A numeric for what month to use as start of water year, 10 (default).
+#'
+#' @return A \code{tibble} with percentiles of `wy_doy`.
+#' @export
+#'
+summary_stats_doy <- function(data, value_name, wy_month = 10) {
+
+        data <- prep_flow(data, {{value_name}}, wy_month)
+
+        data  %>%
+        dplyr::group_by(wy_doy) %>%
+        dplyr::reframe(quantiles = quantile(vattenforing_m3_s,
+                                            probs = c(0,0.05, 0.1,
+                                                      0.2,0.25, 0.5,
+                                                      0.75,0.80, 0.90,
+                                                      0.95, 1), na.rm = TRUE),
+                                   breaks =  c("p0_va","p05_va", "p10_va",
+                                               "p20_va", "p25_va", "p50_va",
+                                               "p75_va","p80_va", "p90_va",
+                                               "p95_va", "p100_va")) %>%
+        tidyr::pivot_wider(values_from = quantiles, names_from = breaks)  %>%
+        dplyr::right_join(data, by = c("wy_doy")) %>%
+        dplyr::ungroup()
+
+}
+
+#' Get FF Values
+#'
+#' @param data A data.frame with date and flow columns.
+#' @param value_name One unquoted expression for flow column name, e.g. vettenforing_m3_s.
+#' @param wy_month A numeric for what month to use as start of water year, 10 (default).
+#'
+#' @return A \code{tibble} with Q1, Q2, and Q5 flood frequency values
+ff_vals <- function(data, value_name, wy_month = 10) {
+
+    data <- prep_flow(data, {{value_name}}, wy_month)
+
+    data_peak <- data %>%
+        dplyr::group_by(wy) %>%
+        dplyr::reframe(peak_flow = max({{value_name}}, na.rm = T)) %>%
+        dplyr::ungroup()  %>%
+        dplyr::reframe(mean_q = mean(log(peak_flow), na.rm = T),
+                       sd_q = sd(log(peak_flow), na.rm = T))
+    dplyr::tibble(
+        q1 = exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.9)),
+        q2 = exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.5)),
+        q5 = exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.2)),
+    )
+
 }
