@@ -16,7 +16,7 @@ floo <- function(smhidata) {
     #grab only max discharge for each year
     gaugedata <- smhidata %>%
         dplyr::group_by(year) %>%
-        dplyr::distinct(vattenforing_m3_s, .keep_all = T) %>%
+        # dplyr::distinct(vattenforing_m3_s, .keep_all = T) %>%
         dplyr:: filter(vattenforing_m3_s == max(vattenforing_m3_s))
 
     #return final dataset
