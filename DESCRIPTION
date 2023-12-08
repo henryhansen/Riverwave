@@ -27,7 +27,12 @@ Imports:
     ggplot2,
     lubridate,
     scales,
-    purrr
+    purrr,
+    tidyr,
+    rgl,
+    terra,
+    lattice,
+    forcats
 Suggest:
     ggfx
     magrittr,
