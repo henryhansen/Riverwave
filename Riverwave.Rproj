@@ -21,3 +21,7 @@ PackageBuildArgs: --no-lock
 PackageBuildBinaryArgs: --no-lock
 PackageCheckArgs: --no-lock
 PackageRoxygenize: rd,collate,namespace
+
+PythonType: conda
+PythonVersion: 3.11.3
+PythonPath: C:/Users/joshualerickson/AppData/Local/anaconda3/envs/ee/python.exe

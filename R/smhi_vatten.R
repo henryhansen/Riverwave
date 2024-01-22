@@ -104,4 +104,34 @@ smhi_vatten_retrieve <- function(stn_nos){
 }
 
 
+#' SMHI Natural Model
+#'
+#' @param stn_no Numeric. Station Number.
+#' @return dataframe of natural modeled data from 2010-10-01 to 2023-09-30.
+#' @importFrom magrittr "%>%"
+#' @export
+#'
+#'
+#'
+
+smhi_vatten_natural <- function(stn_no){
+
+    base_url <- 'https://vattenwebb.smhi.se/regulations/rest/basin?subid='
+
+    data_url <- paste0(base_url, stn_no)
+    #get json
+    error <- httr::GET(url = data_url,
+                       httr::write_disk(path = file.path(tempdir(),
+                                                         "smhi.json"),
+                                        overwrite = TRUE))
+    #read json
+    properties <- jsonify::from_json(file.path(tempdir(),
+                                               "smhi.json"))
+    #convert to geojson and then sf
+    properties_natural <- data.frame(properties$timeseries$natural)%>%
+                          dplyr::mutate(date = seq(as.Date('2010-10-01'), as.Date('2023-09-30'), 1))
+
+    return(properties_natural)
+}
+
 
