@@ -149,7 +149,15 @@ station_ffa_results <- read_csv('data/combined_ffa.csv')
 devtools::document()
 
 
-riverwave_3d(smhiDataClean[[1]], vattenforing_m3_s, station_ffa_results[1,]$ffa_oneyear_nf,
+riverwave_3d(smhiDataClean[[1]],
+             vattenforing_m3_s,
+             station_ffa_results[1,]$ffa_oneyear_nf,
+             station_ffa_results[1,]$ffa_twoyear_nf)
+
+
+riverwave_rastergraph(smhiDataClean[[1]],
+             vattenforing_m3_s,
+             station_ffa_results[1,]$ffa_oneyear_nf,
              station_ffa_results[1,]$ffa_twoyear_nf)
 
 riverwave_percentiles_plot(smhiDataClean[[1]],

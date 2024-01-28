@@ -77,7 +77,7 @@ riverwave_percentiles_plot <- function(data, value_name,q1, q2, q5,  wy_month = 
 #' @return
 #' @export
 #'
-riverwave_rastergraph <- function(data, value_name, wy_month = 10) {
+riverwave_rastergraph <- function(data, value_name, q1, q2, wy_month = 10) {
 
         if (!requireNamespace("ggfx")) {
 
