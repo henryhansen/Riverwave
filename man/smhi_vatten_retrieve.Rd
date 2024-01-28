@@ -15,3 +15,6 @@ A data.frame
 \description{
 Get all data from SMHI Vatten
 }
+\examples{
+
+}

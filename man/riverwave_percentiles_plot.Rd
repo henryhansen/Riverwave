@@ -4,12 +4,18 @@
 \alias{riverwave_percentiles_plot}
 \title{Get DOY Summary Stats Graph}
 \usage{
-riverwave_percentiles_plot(data, value_name, wy_month = 10)
+riverwave_percentiles_plot(data, value_name, q1, q2, q5, wy_month = 10)
 }
 \arguments{
 \item{data}{A data.frame with date and flow columns.}
 
 \item{value_name}{One unquoted expression for flow column name, e.g. vettenforing_m3_s.}
+
+\item{q1}{Numeric. Peakflow for 1 year recurrence interval.}
+
+\item{q2}{Numeric. Peakflow for 2 year recurrence interval.}
+
+\item{q5}{Numeric. Peakflow for 5 year recurrence interval.}
 
 \item{wy_month}{A numeric for what month to use as start of water year, 10 (default).}
 }

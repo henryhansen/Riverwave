@@ -106,7 +106,7 @@ smhi_vatten_retrieve <- function(stn_nos){
 
 #' SMHI Natural Model
 #'
-#' @param stn_no Numeric. Station Number.
+#' @param subid Numeric. Station Number.
 #' @return dataframe of natural modeled data from 2010-10-01 to 2023-09-30.
 #' @importFrom magrittr "%>%"
 #' @export
@@ -130,6 +130,42 @@ smhi_vatten_natural <- function(stn_no){
     #convert to geojson and then sf
     properties_natural <- data.frame(properties$timeseries$natural)%>%
                           dplyr::mutate(date = seq(as.Date('2010-10-01'), as.Date('2023-09-30'), 1))
+
+    return(properties_natural)
+}
+
+
+
+#' SMHI Natural Model (spatial)
+#'
+#' @param point A sf object.
+#' @return dataframe of natural modeled data from 2010-10-01 to 2023-09-30.
+#' @importFrom magrittr "%>%"
+#' @export
+#'
+#'
+#'
+
+smhi_vatten_natural_pt <- function(point){
+
+    point <- point %>% sf::st_transform(3006)
+
+    x <- point$geometry[[1]][[1]]
+    y <- point$geometry[[1]][[2]]
+
+    base_url <- paste0('https://vattenwebb.smhi.se/regulations/rest/point?x=',x,'&y=',y)
+
+    #get json
+    error <- httr::GET(url = base_url,
+                       httr::write_disk(path = file.path(tempdir(),
+                                                         "smhi.json"),
+                                        overwrite = TRUE))
+    #read json
+    properties <- jsonify::from_json(file.path(tempdir(),
+                                               "smhi.json"))
+    #convert to geojson and then sf
+    properties_natural <- data.frame(properties$timeseries$natural)%>%
+        dplyr::mutate(date = seq(as.Date('2010-10-01'), as.Date('2023-09-30'), 1))
 
     return(properties_natural)
 }

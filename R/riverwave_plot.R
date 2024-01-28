@@ -23,6 +23,9 @@ riverwave_plot <- function(df) {
 #'
 #' @param data A data.frame with date and flow columns.
 #' @param value_name One unquoted expression for flow column name, e.g. vettenforing_m3_s.
+#' @param q1 Numeric. Peakflow for 1 year recurrence interval.
+#' @param q2 Numeric. Peakflow for 2 year recurrence interval.
+#' @param q5 Numeric. Peakflow for 5 year recurrence interval.
 #' @param wy_month A numeric for what month to use as start of water year, 10 (default).
 #'
 #' @return A \code{ggplot} with percentiles, proportion to wy max and Q1, Q2, Q5 flood frequency values.
@@ -30,10 +33,10 @@ riverwave_plot <- function(df) {
 #' @export
 #'
 
-riverwave_percentiles_plot <- function(data, value_name, wy_month = 10) {
+riverwave_percentiles_plot <- function(data, value_name,q1, q2, q5,  wy_month = 10) {
 
 
-        ff_vals <- ff_vals(data, {{value_name}}, wy_month)
+        ff_vals <- tibble(q1 = q1, q2 = q2, q5 = q5)
 
         data <- data %>% summary_stats_doy({{value_name}}, wy_month)
 
@@ -67,6 +70,8 @@ riverwave_percentiles_plot <- function(data, value_name, wy_month = 10) {
 #'
 #' @param data A data.frame with date and flow columns.
 #' @param value_name One unquoted expression for flow column name, e.g. vettenforing_m3_s.
+#' @param q1 Numeric. Peakflow for 1 year recurrence interval.
+#' @param q2 Numeric. Peakflow for 2 year recurrence interval.
 #' @param wy_month A numeric for what month to use as start of water year, 10 (default).
 #'
 #' @return
@@ -85,7 +90,7 @@ riverwave_rastergraph <- function(data, value_name, wy_month = 10) {
         }
 
 
-        ff_vals <- ff_vals(data, {{value_name}}, wy_month)
+        ff_vals <- tibble(q1 = q1, q2 = q2)
 
         data <- prep_flow(data, {{value_name}}, wy_month)
 
@@ -128,6 +133,8 @@ riverwave_rastergraph <- function(data, value_name, wy_month = 10) {
 #'
 #' @param data A data.frame with date and flow columns.
 #' @param value_name One unquoted expression for flow column name, e.g. vettenforing_m3_s.
+#' @param q1 Numeric. Peakflow for 1 year recurrence interval.
+#' @param q2 Numeric. Peakflow for 2 year recurrence interval.
 #' @param wy_month A numeric for what month to use as start of water year, 10 (default).
 #' @param ... Arguments to pass to \link[rgl]{view3d}.
 #'
@@ -136,20 +143,9 @@ riverwave_rastergraph <- function(data, value_name, wy_month = 10) {
 #'
 #' @examples
 
-riverwave_3d <- function(data, value_name, wy_month = 10, ...) {
+riverwave_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
 
     data <- prep_flow(data, {{value_name}}, wy_month)
-
-    data_peak <- data %>%
-                 dplyr::group_by(wy) %>%
-                 dplyr::reframe(peak_flow = max({{value_name}}, na.rm = T)) %>%
-                 dplyr::ungroup()  %>%
-                 dplyr::reframe(mean_q = mean(log(peak_flow), na.rm = T),
-                                sd_q = sd(log(peak_flow), na.rm = T))
-
-    q1 <- exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.9))
-    q2 <- exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.5))
-    q5 <- exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.2))
 
     data_mat <- data %>%
         dplyr::select(wy_doy, wy, {{value_name}}) %>%

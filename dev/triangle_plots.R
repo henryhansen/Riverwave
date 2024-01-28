@@ -28,7 +28,7 @@ PlotTools::SpectrumLegend(palette = rowCol,
                           "topright",
                           xpd = T,
                           inset = c(-0.1,0),
-                          title.cex = 0.75,
+                          #title.cex = 0.75,
                           cex = 0.75,
                           bty = "n")
 
@@ -36,7 +36,7 @@ size <- c(1,2,3,4,5)
 scale <- 2
 legend("topleft",
        title = "Log10(Catchment Size)",
-       title.cex = 0.75,
+       #title.cex = 0.75,
        cex = 1,
        legend = size,
        pt.cex = size / scale,

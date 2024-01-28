@@ -12,6 +12,13 @@ riverwave_rastergraph(data, value_name, wy_month = 10)
 \item{value_name}{One unquoted expression for flow column name, e.g. vettenforing_m3_s.}
 
 \item{wy_month}{A numeric for what month to use as start of water year, 10 (default).}
+
+\item{q1}{Numeric. Peakflow for 1 year recurrence interval.}
+
+\item{q2}{Numeric. Peakflow for 2 year recurrence interval.}
+}
+\value{
+
 }
 \description{
 Riverwave Rastergraph

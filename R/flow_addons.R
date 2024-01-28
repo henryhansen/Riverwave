@@ -240,3 +240,19 @@ ff_vals <- function(data, value_name, wy_month = 10) {
     )
 
 }
+
+#' @title Get Peak Flows
+#' @param data A data.frame with date and flow columns.
+#' @param value_name One unquoted expression for flow column name, e.g. vettenforing_m3_s.
+#' @param wy_month A numeric for what month to use as start of water year, 10 (default).
+#' @return A data.frame with peak flows labelled `peak_flow`.
+floowy <- function(data, value_name, wy_month = 10) {
+
+
+    data <- prep_flow(data, {{value_name}}, wy_month)
+
+    data_peak <- data %>%
+        dplyr::group_by(wy) %>%
+        dplyr::reframe(peak_flow = max({{value_name}}, na.rm = T)) %>%
+        dplyr::ungroup()
+}
