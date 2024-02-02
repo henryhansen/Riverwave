@@ -129,7 +129,7 @@ smhi_vatten_natural <- function(stn_no){
                                                "smhi.json"))
     #convert to geojson and then sf
     properties_natural <- data.frame(properties$timeseries$natural)%>%
-                          dplyr::mutate(date = seq(as.Date('2010-10-01'), as.Date('2023-09-30'), 1))
+                          dplyr::mutate(date = seq(as.Date('2010-01-01'), by = 1, length.out = nrow(.)))
 
     return(properties_natural)
 }
@@ -164,8 +164,8 @@ smhi_vatten_natural_pt <- function(point){
     properties <- jsonify::from_json(file.path(tempdir(),
                                                "smhi.json"))
     #convert to geojson and then sf
-    properties_natural <- data.frame(properties$timeseries$natural)%>%
-        dplyr::mutate(date = seq(as.Date('2010-10-01'), as.Date('2023-09-30'), 1))
+    properties_natural <- data.frame(properties$timeseries$natural) %>%
+        dplyr::mutate(date = seq(as.Date('2010-01-01'), by = 1, length.out = nrow(.)))
 
     return(properties_natural)
 }
