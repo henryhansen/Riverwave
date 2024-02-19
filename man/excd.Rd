@@ -15,6 +15,3 @@ exceedence table
 \description{
 Title
 }
-\examples{
-
-}

@@ -168,6 +168,35 @@ month_to_doy <- function(wy_month, leap = FALSE) {
 
 }
 
+#' Add Proportions via Theory
+#' @description Adds proportion of observation per water year day based on user imputed recurrence intervals, which correspond to riverwave theory.
+#'
+#' @param data A daily value df
+#' @param value_name A unquoted expression for column name, e.g. vattenforing_m3_s.
+#' @param q1 Numeric. Peakflow for 1 year recurrence interval.
+#' @param q2 Numeric. Peakflow for 2 year recurrence interval.
+#' @param wy_month A numeric for what month to use as start of water year, 10 (default).
+#'
+#' @return a proportion column within df per water year.
+#' @noRd
+add_wave_proportions <- function(data, value_name, q1, q2, wy_month = 10) {
+
+
+        data <- prep_flow(data, {{value_name}}, wy_month)
+
+        ff_vals <- dplyr::tibble(q1 = q1, q2 = q2)
+
+        data %>%
+        dplyr::group_by(wy_doy) %>%
+        dplyr::mutate(cut_value = ifelse({{value_name}} < ff_vals$q1, 'Riverine Productivity',
+                                  ifelse({{value_name}} >= ff_vals$q1 & {{value_name}} < ff_vals$q2, 'River Continuum', 'Flood Pulse')),
+               cut_value = factor(cut_value, levels = c('Riverine Productivity', 'River Continuum', 'Flood Pulse'))) %>%
+        dplyr::add_count() %>%
+        dplyr::group_by(wy_doy, n) %>%
+        count(cut_value, .drop = FALSE, name = 'theory_count') %>%
+        dplyr::mutate(proportions = theory_count/n)
+}
+
 #' Add Proportion
 #' @description Adds proportion of observation per water year based on the maximum.
 #'
@@ -178,7 +207,7 @@ month_to_doy <- function(wy_month, leap = FALSE) {
 #' @noRd
 add_proportion <- function(data, value_name) {
 
-        dplyr::group_by(data, wy) %>%
+    dplyr::group_by(data, wy) %>%
         dplyr::mutate(dplyr::across({{value_name}},
                                     list(max_prop = ~.x/max(.x, na.rm = TRUE)
                                     ))) %>%
@@ -252,7 +281,7 @@ floowy <- function(data, value_name, wy_month = 10) {
     data <- prep_flow(data, {{value_name}}, wy_month)
 
     data_peak <- data %>%
-        dplyr::group_by(wy) %>%
-        dplyr::reframe(peak_flow = max({{value_name}}, na.rm = T)) %>%
-        dplyr::ungroup()
+                    dplyr::group_by(wy) %>%
+                    dplyr::reframe(peak_flow = max({{value_name}}, na.rm = T)) %>%
+                    dplyr::ungroup()
 }

@@ -1,10 +1,10 @@
 devtools::document()
 library(tidyverse)
+library(brms)
 
 ### read in sites
 
 final_dataset <- read_rds('data/final_dataset.rds')
-
 
 ### loop through sites to get the natural flow
 
@@ -142,26 +142,197 @@ station_ffa_results %>%
 write_csv(station_ffa_results, 'data/combined_ffa.csv')
 
 
-library(tidyverse)
+### now get proportions
 
-station_ffa_results <- read_csv('data/combined_ffa.csv')
+oneyear_og <- as.list(station_ffa_results$ffa_oneyear_og)
+twoyear_og <- as.list(station_ffa_results$ffa_twoyear_og)
 
-devtools::document()
+l <- list(smhiDataClean, oneyear_og,
+          twoyear_og, names(smhiDataClean))
+
+proportions_og <-  pmap(l,~add_wave_proportions(..1,
+                                                vattenforing_m3_s,
+                                                q1 = ..2,
+                                                q2 = ..3) %>% mutate(Stnno = ..4) ) %>%
+                    bind_rows()
+
+oneyear_nf <- as.list(station_ffa_results$ffa_oneyear_nf)
+twoyear_nf <- as.list(station_ffa_results$ffa_twoyear_nf)
+
+l_nf <- list(smhiDataClean, oneyear_nf,
+          twoyear_nf, names(smhiDataClean))
+
+proportions_nf <-  pmap(l_nf,~add_wave_proportions(..1,
+                                                vattenforing_m3_s,
+                                                q1 = ..2,
+                                                q2 = ..3) %>% mutate(Stnno = ..4) ) %>%
+                   bind_rows()
+
+write_csv(proportions_nf, 'data/proportions_nf.csv')
+write_csv(proportions_og, 'data/proportions_og.csv')
 
 
-riverwave_3d(smhiDataClean[[66]],
+
+# get the 3-d plots for both natural flow and original cutoffs
+
+# Morrumsan = 186, Ronne = 2128, Vindelalven = 2237
+
+final_dataset
+
+# a pre-defined matrix for png output orientation
+um <- readRDS('data/um.rds')
+
+# because of the way it was coded with smhiDataClean we need to use `index` from `final_dataset` instead of `Stnno`
+
+vec <- c(186, 2128, 2237, 186, 2128, 2237)
+
+for(i in seq_along(vec)) {
+
+i_count <- i
+
+site = as.character(vec[i])
+
+site_name = final_dataset[final_dataset$Stnno == vec[i],]$Section_of_river
+
+index <- final_dataset[final_dataset$Stnno == vec[i],]$index
+
+if (i_count %in% 1:3){
+
+riverwave_3d(smhiDataClean[[as.character(index)]],
              vattenforing_m3_s,
-             station_ffa_results[66,]$ffa_oneyear_nf,
-             station_ffa_results[66,]$ffa_twoyear_nf)
+             station_ffa_results[station_ffa_results$Stnno == index,]$ffa_oneyear_og,
+             station_ffa_results[station_ffa_results$Stnno == index,]$ffa_twoyear_og,
+             userMatrix = um)
+} else {
+
+    riverwave_3d(smhiDataClean[[as.character(index)]],
+                 vattenforing_m3_s,
+                 station_ffa_results[station_ffa_results$Stnno == index,]$ffa_oneyear_nf,
+                 station_ffa_results[station_ffa_results$Stnno == index,]$ffa_twoyear_nf,
+                 userMatrix = um)
+
+}
+
+rgl::title3d(sub = 'Day of Year (DOY)', line = 15, level = 0)
+
+rgl::title3d(ylab = 'Water Year', line = 3.5)
+
+rgl::title3d(zlab = 'Discharge (cms)', line = 3.5)
+
+if (i_count  %in% 1:3) {
+rgl::snapshot3d(paste0('images/rw3d/', site_name ,'_og.png'),
+                height = 1000, width = 1100)
+
+} else {
+
+    rgl::snapshot3d(paste0('images/rw3d/', site_name ,'_nf.png'),
+                    height = 1000, width = 1100)
+
+}
+
+}
 
 
-riverwave_rastergraph(smhiDataClean[[66]],
+# get the figures for the panel plot (figure-2)
+
+# Karlslund 2 (SVARTÅN) = 2139
+
+karlslund_index <- final_dataset[final_dataset$Stnno == 2139,]$index
+
+riverwave_rastergraph(smhiDataClean[[as.character(karlslund_index)]],
              vattenforing_m3_s,
-             station_ffa_results[66,]$ffa_oneyear_nf,
-             station_ffa_results[66,]$ffa_twoyear_nf)
+             station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_oneyear_og,
+             station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_twoyear_og) %>%
+    ggsave(filename = 'rastergraph_karlslund2_og.png', path = 'images/panel_plot_paper/', device = 'png',
+           height = 75, width = 216, units = 'mm')
 
-riverwave_percentiles_plot(smhiDataClean[[66]],
+riverwave_rastergraph(smhiDataClean[[as.character(karlslund_index)]],
+             vattenforing_m3_s,
+             station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_oneyear_nf,
+             station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_twoyear_nf)%>%
+    ggsave(filename = 'rastergraph_karlslund2_nf.png', path = 'images/panel_plot_paper/', device = 'png',
+           height = 75, width = 216, units = 'mm')
+
+riverwave_percentiles_plot(smhiDataClean[[as.character(karlslund_index)]],
                            vattenforing_m3_s,
-                           station_ffa_results[66,]$ffa_oneyear_nf,
-                           station_ffa_results[66,]$ffa_twoyear_nf,
-                           station_ffa_results[66,]$ffa_fiveyear_nf)
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_oneyear_nf,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_twoyear_nf,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_fiveyear_nf) +
+    theme_bw()
+
+riverwave_percentiles_plot(smhiDataClean[[as.character(karlslund_index)]],
+                           vattenforing_m3_s,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_oneyear_og,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_twoyear_og,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_fiveyear_og) +
+    theme_bw()
+
+
+vec <- c(2139, 2139)
+
+for(i in seq_along(vec)) {
+
+    i_count <- i
+
+    site = as.character(vec[i])
+
+    site_name = final_dataset[final_dataset$Stnno == vec[i],]$Section_of_river
+
+    index <- final_dataset[final_dataset$Stnno == vec[i],]$index
+
+    if (i_count == 1){
+
+        riverwave_3d(smhiDataClean[[as.character(index)]],
+                     vattenforing_m3_s,
+                     station_ffa_results[station_ffa_results$Stnno == index,]$ffa_oneyear_og,
+                     station_ffa_results[station_ffa_results$Stnno == index,]$ffa_twoyear_og,
+                     userMatrix = um)
+    } else {
+
+        riverwave_3d(smhiDataClean[[as.character(index)]],
+                     vattenforing_m3_s,
+                     station_ffa_results[station_ffa_results$Stnno == index,]$ffa_oneyear_nf,
+                     station_ffa_results[station_ffa_results$Stnno == index,]$ffa_twoyear_nf,
+                     userMatrix = um)
+
+    }
+
+    rgl::title3d(sub = 'Day of Year (DOY)', line = 15, level = 0)
+
+    rgl::title3d(ylab = 'Water Year', line = 3.5)
+
+    rgl::title3d(zlab = 'Discharge (cms)', line = 3.5)
+
+    if (i_count == 1) {
+        rgl::snapshot3d(paste0('images/panel_plot_paper/rw3d', site_name ,'_og.png'),
+                        height = 1000, width = 1100)
+
+    } else {
+
+        rgl::snapshot3d(paste0('images/panel_plot_paper/rw3d', site_name ,'_nf.png'),
+                        height = 1000, width = 1100)
+
+    }
+
+}
+
+
+# latitude graph
+latitude_rastergraph(smhiDataClean) + theme(text = element_text(size = 12))
+
+
+
+
+
+
+### just observing way it makes a difference between `natural_flow` and `regulated_flow`
+natural_flow_df <- read_csv('data/natural_flow_df.csv')
+
+natural_flow_df %>% filter(Stnno == '2139')%>% filter(date > '2010-01-01') %>%
+    ggplot(aes(date, values)) +
+    geom_line(data = smhiDataClean[['380']] %>% filter(date > '2010-01-01'), aes(date, vattenforing_m3_s)) +
+    geom_line(color = 'red')
+
+
+
+

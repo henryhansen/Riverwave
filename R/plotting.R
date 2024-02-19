@@ -122,7 +122,7 @@ latitude_rastergraph <- function(data) {
 
     dup_labels <- function(x) final_df$month_abb[match(x, final_df$wy_doy)]
 
-    y_labels <- function(x) final_df$lat[match(x, final_df$id)]
+    y_labels <- function(x) round(final_df$lat[match(x, final_df$id)],4)
 
     if (!requireNamespace("ggfx")) {
 
@@ -137,7 +137,7 @@ latitude_rastergraph <- function(data) {
     final_df %>%
         ggplot2::ggplot(ggplot2::aes(wy_doy, id)) +
         tile +
-        ggplot2::scale_y_continuous(breaks = seq(min(final_df$id), max(final_df$id), length.out = 5),
+        ggplot2::scale_y_continuous(breaks = round(seq(min(final_df$id), max(final_df$id), length.out = 5),4),
                                      labels = y_labels,
                                      name = 'Latitude') +
         ggplot2::scale_x_continuous(breaks = xbreaks,

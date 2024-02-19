@@ -40,7 +40,6 @@ riverwave_percentiles_plot <- function(data, value_name,q1, q2, q5,  wy_month = 
 
         data <- data %>% summary_stats_doy({{value_name}}, wy_month)
 
-
         data %>%
         dplyr::group_by(wy_doy) %>%
         dplyr::slice(1) %>%
@@ -54,14 +53,14 @@ riverwave_percentiles_plot <- function(data, value_name,q1, q2, q5,  wy_month = 
                Percentiles = factor(Percentiles, levels = c('Lowest Flow', '10%', '25%', 'Median Flow', '75%', '95%'))) %>%
         ggplot2::ggplot() +
         ggplot2::geom_line(aes(wy_doy, value, group = Percentiles, color = Percentiles), size = 1.5) +
-        geomtextpath::geom_texthline(yintercept = ff_vals$q1, linetype = 3, label = paste0('Q1: ', round(ff_vals$q1, 2), ' (cms)')) +
-        geomtextpath::geom_texthline(yintercept = ff_vals$q2, linetype = 2, label = paste0('Q2: ', round(ff_vals$q2, 2), ' (cms)')) +
-        geomtextpath::geom_texthline(yintercept = ff_vals$q5, linetype = 1, label = paste0('Q5: ', round(ff_vals$q5, 2), ' (cms)')) +
         ggplot2::scale_color_manual(values = hcl.colors(n = 6, palette = 'Viridis'))  +
         ggplot2::geom_line(data = data %>% filter(wy_doy < 366), aes(wy_doy,
                                                                      {{value_name}},
                                                                      group = wy), alpha = 0.15, linewidth = 0.25) +
-        ggplot2::labs(x = "Water Year (DOY)", y = 'Discharge (cms)')
+        geomtextpath::geom_labelhline(yintercept = ff_vals$q1, linetype = 3, label = paste0('Q1: ', round(ff_vals$q1, 2), ' (cms)'), fontface = 'bold') +
+        geomtextpath::geom_labelhline(yintercept = ff_vals$q2, linetype = 2, label = paste0('Q2: ', round(ff_vals$q2, 2), ' (cms)'),  fontface = 'bold') +
+        geomtextpath::geom_labelhline(yintercept = ff_vals$q5, linetype = 1, label = paste0('Q5: ', round(ff_vals$q5, 2), ' (cms)'), fontface = 'bold') +
+        ggplot2::labs(x = "Day of Year (DOY)", y = 'Discharge (cms)')
 
 
 }
@@ -111,7 +110,7 @@ riverwave_rastergraph <- function(data, value_name, q1, q2, wy_month = 10) {
                                                       by = 10),
                                          name = 'Water Year') +
             ggplot2::scale_x_continuous(breaks = xbreaks,
-                                        name = 'Day of Year',
+                                        name = 'Day of Year (DOY)',
                                         sec.axis = ggplot2::dup_axis(labels = dup_labels, name = NULL),
                                         expand = c(0,0)) +
             tile +

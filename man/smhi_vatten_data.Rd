@@ -15,6 +15,3 @@ A data.frame
 \description{
 Get SMHI Vatten
 }
-\examples{
-
-}

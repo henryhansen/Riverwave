@@ -9,9 +9,6 @@ latitude_rastergraph(data)
 \arguments{
 \item{data}{}
 }
-\value{
-
-}
 \description{
 Latitude Rastergraph
 }

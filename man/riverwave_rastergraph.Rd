@@ -17,9 +17,6 @@ riverwave_rastergraph(data, value_name, q1, q2, wy_month = 10)
 
 \item{wy_month}{A numeric for what month to use as start of water year, 10 (default).}
 }
-\value{
-
-}
 \description{
 Riverwave Rastergraph
 }
