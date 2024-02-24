@@ -141,7 +141,7 @@ station_ffa_results %>%
 
 write_csv(station_ffa_results, 'data/combined_ffa.csv')
 
-
+station_ffa_results <- read_csv('data/combined_ffa.csv')
 ### now get proportions
 
 oneyear_og <- as.list(station_ffa_results$ffa_oneyear_og)
@@ -321,7 +321,13 @@ for(i in seq_along(vec)) {
 latitude_rastergraph(smhiDataClean) + theme(text = element_text(size = 12))
 
 
+index_test <- final_dataset[final_dataset$Stnno == 2139,]$index
 
+riverwave_3d(smhiDataClean[[as.character(index_test)]],
+             vattenforing_m3_s,
+             station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_oneyear_og,
+             station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_twoyear_og,
+             userMatrix = um)
 
 
 

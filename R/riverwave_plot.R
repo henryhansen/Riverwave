@@ -157,6 +157,7 @@ riverwave_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
         # dplyr::group_by(wy) %>%
         # dplyr::slice(rep(1:dplyr::n(), each = 3)) %>%
         # dplyr::ungroup() %>%
+        dplyr::arrange(dplyr::desc(wy)) %>%
         dplyr::select(-wy)
 
     data_mat <- as.matrix(data_mat)
