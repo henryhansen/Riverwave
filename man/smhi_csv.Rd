@@ -36,7 +36,7 @@ Downloads a csv of gauge data for a specific gauge station
 directory <- getwd()
 
 # exports the csv to a specific place
-smhi_csv(stationID = 274, direc = directory)
+\dontrun{smhi_csv(stationID = 274, direc = directory)}
 
 # returns the csv as an object when specified
 test <- smhi_csv(stationID = 274)

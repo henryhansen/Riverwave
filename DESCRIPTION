@@ -16,7 +16,6 @@ Imports:
     RCurl,
     utils,
     r2d3,
-    lubridate,
     httr,
     dplyr,
     jsonify,

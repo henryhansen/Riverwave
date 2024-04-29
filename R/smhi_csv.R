@@ -18,7 +18,7 @@
 #' directory <- getwd()
 #'
 #' # exports the csv to a specific place
-#' smhi_csv(stationID = 274, direc = directory)
+#' \dontrun{smhi_csv(stationID = 274, direc = directory)}
 #'
 #' # returns the csv as an object when specified
 #' test <- smhi_csv(stationID = 274)
@@ -99,7 +99,3 @@ smhi_csv <- function(stationID, direc = NA, version = "latest", parameter = "1",
 }
 
 
-# API Request -------------------------------------------------------------
-
-# Example of a single api data request in csv
-# https://opendata-download-hydroobs.smhi.se/api/version/latest/parameter/1/station/2357/period/corrected-archive/data.csv

@@ -5,8 +5,6 @@
 system-setup.R
 dev-rastergraph
 data
-d3/
 other_documentation/
-R/old_files/
 data/
 vignettes/
