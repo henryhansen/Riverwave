@@ -141,7 +141,7 @@ riverwave_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
 
     data_mat <- as.matrix(data_mat)
 
-    data_mat_rast <- raster::raster(data_mat)
+    data_mat_rast <- terra::rast(data_mat)
 
     myColorRamp <- function(colors, values) {
         v <- (values - min(values))/diff(range(values))
@@ -159,8 +159,8 @@ riverwave_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
 
     colour_breaks <- c(0,q1,q2,max_all_time)
 
-    rasterVis::plot3D(data_mat_rast, col = myPal,
-                      drape = raster::cut(data_mat_rast, colour_breaks))
+    plot3D_rw(data_mat_rast, col = myPal,
+                      drape = terra::classify(data_mat_rast, colour_breaks))
 
 
     ranges <- getRanges()
@@ -246,3 +246,83 @@ getRanges <- function (expand = 1.03, ranges = rgl::par3d("bbox")) {
         mean(ranges$zlim)
     ranges
 }
+
+#' Plot 3D for RW
+#'
+#' @param x
+#' @param maxpixels
+#' @param zfac
+#' @param drape
+#' @param col
+#' @param at
+#' @param rev
+#' @param useLegend
+#' @param adjust
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot3D_rw <- function(x, maxpixels=1e5, zfac=1, drape=NULL,
+         col=terrain.colors, at=100, rev=FALSE,
+         useLegend=TRUE,
+         adjust=TRUE, ...) {
+    ## much of the below code was taken from example(surface3d) in the rgl package
+    if (requireNamespace("rgl", quietly = TRUE)){
+
+        x <- terra::spatSample(x, size=maxpixels, as.raster=TRUE)
+        X <- terra::xFromCol(x,1:ncol(x))
+        Y <- terra::yFromRow(x, nrow(x):1)
+        Z <- t((terra::values(x, format='matrix'))[nrow(x):1,])
+
+        background <- min(Z, na.rm=TRUE) - 1
+        Z[is.na(Z)] <- background
+
+        zlim <- range(Z)
+        zlen <- zlim[2] - zlim[1] + 1
+        xlen <- max(X) - min(X)
+        ylen <- max(Y) - min(Y)
+        if (adjust) {
+            adj <- 4*zlen/min(ylen,xlen)
+            X <- X * adj
+            Y <- Y * adj
+        }
+
+        if (!is.null(drape)){
+            x <- terra::spatSample(drape, size=maxpixels, as.raster=TRUE)
+            Zcol <- t((terra::values(x, format='matrix'))[nrow(x):1,])
+            background <- min(Zcol, na.rm=TRUE) - 1
+            Zcol[is.na(Zcol)] <- background
+            zlim <- range(Zcol)
+        } else {
+            Zcol <- Z
+        }
+        colorTable <- x@legend@colortable
+        if (useLegend & length(colorTable)>1) {
+            color <- colorTable
+        } else {
+            if (length(at)==1) at <- do.breaks(zlim, at)
+            if (rev) {
+                if (is.function(col)) {
+                    col <- rev(col(length(at)))
+                } else {
+                    col <- rev(col)
+                }
+            }
+            color <- level.colors(Zcol, at=at, col.regions=col)
+        }
+        ## Open a device only if there is none active
+        if (rgl::cur3d() == 0) rgl::open3d()
+
+        if (background==min(Zcol)) {
+            trans <- Zcol
+            trans[] <- 1.0
+            trans[Zcol==background] <- 0
+            rgl::surface3d(X, Y, Z*zfac, color=color, back="lines", alpha=trans)
+        } else {
+            rgl::surface3d(X, Y, Z*zfac, color=color, back="lines")
+        }
+    } else stop("to use this function you need to install the 'rgl' package")
+}
+

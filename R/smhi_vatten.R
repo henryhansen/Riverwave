@@ -8,7 +8,7 @@
 
 smhi_vatten_inv <- function(){
 
-    base_url <- 'https://vattenweb.smhi.se/station/rest/'
+    base_url <- 'https://opendata-download-hydroobs.smhi.se/api/version/latest/parameter/1.json'
 
     #get json
     error <- httr::GET(url = base_url,
@@ -18,10 +18,13 @@ smhi_vatten_inv <- function(){
     #read json
     properties <- jsonify::from_json(file.path(tempdir(),
                                                "smhi.json"))
+
+    properties <- properties$station %>%
+                    dplyr::tibble() %>%
+                    dplyr::select(-link) %>%
+                    dplyr::filter(latitude != 0)
     #convert to geojson and then sf
-    properties_geo <- geojsonio::geojson_sf(geojsonio::as.json(properties)) %>%
-        dplyr::mutate(dplyr::across(c('Type', 'Variables'), ~as.character(.x))) %>%
-        dplyr::filter(Variables %in% 'Q')
+    properties_geo <- sf::st_as_sf(properties, coords = c('longitude', 'latitude'), crs = 4326)
 
     return(properties_geo)
 }
@@ -36,66 +39,6 @@ smhi_vatten_map <- function(smhi_vatten_inv){
 
 mapview::mapview(smhi_vatten_inv)
 
-}
-
-
-#' Get SMHI Vatten
-#'
-#' @param stn_no Numeric. Station Number.
-#' @return A data.frame
-#' @export
-#' @examples
-#'
-smhi_vatten_data <- function(stn_no){
-
-base_url <- 'https://vattenweb.smhi.se/station/rest/report/'
-
-data_url <- paste0(base_url, stn_no)
-#get xls by station number
-error <- httr::GET(url = data_url,
-                   httr::write_disk(path = file.path(tempdir(),
-                                                     "smhi_data.xls"),
-                                    overwrite = TRUE))
-
-data <- suppressMessages(readxl::read_xls(file.path(tempdir(),
-                                           "smhi_data.xls"),
-                         sheet = 1,
-                         skip = 13))
-column_names <- c('date','vattenforing_m3_s','datakontroll_vattenforing')
-for(i in column_names){
-
-  colnames(data)[which(column_names %in% i)]  <- i
-
-}
-
-data <- data %>% dplyr::mutate(date = lubridate::as_date(date))
-
-}
-
-
-#' current dataframe
-#'
-#' @param inv dataframe of smhi inventory
-#' @return station numbers currently monitored
-#' @export
-#' @examples
-#'
-smhi_vatten_current <- function(inv) {
-    latest <- Sys.Date()-1
-    index <- which(inv$DataTo >= latest)
-    return(sf::st_drop_geometry(inv[index,"Stnno"]))
-}
-
-#' Get all data from SMHI Vatten
-#'
-#' @param stn_nos vector of Numeric. Station Number.
-#' @return A data.frame
-#' @export
-#' @examples
-#'
-smhi_vatten_retrieve <- function(stn_nos){
-    stn_data <- apply(stn_nos, 1, FUN = smhi_vatten_data)
-    return(stn_data)
 }
 
 
