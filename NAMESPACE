@@ -3,7 +3,6 @@
 export("%>%")
 export(FF_LogNormal)
 export(excd)
-export(floo)
 export(get_rbi)
 export(latitude_rastergraph)
 export(prep_flow)

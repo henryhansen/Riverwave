@@ -8,3 +8,6 @@
 ^bayes_flood_plots\.R$
 ^bayes_flood_freq\.R$
 ^helper_functions\.R$
+^dev
+^images
+^random
