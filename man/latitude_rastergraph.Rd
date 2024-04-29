@@ -7,7 +7,7 @@
 latitude_rastergraph(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{A data.frame}
 }
 \description{
 Latitude Rastergraph

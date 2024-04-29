@@ -2,16 +2,20 @@
 % Please edit documentation in R/flow_addons.R
 \name{excd}
 \alias{excd}
-\title{Title}
+\title{Exceedance Probabilities}
 \usage{
 excd(gaugedata, discharge = "vattenforing_m3_s", constant = 0.3)
 }
 \arguments{
-\item{constant}{}
+\item{gaugedata}{data.frame with discharge column}
+
+\item{discharge}{A column with discharge data}
+
+\item{constant}{numeric. Gringorten plotting position formula}
 }
 \value{
 exceedence table
 }
 \description{
-Title
+This function calculates exceedance probabilities using Gringorten plotting position formula.
 }

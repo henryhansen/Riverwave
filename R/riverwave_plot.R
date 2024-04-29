@@ -1,24 +1,3 @@
-riverwave_prep <- function(df, flow_var, year_var, day_var) {
-    #calculate average qmax across time series
-    df %>%
-        group_by({{year_var}}) %>%
-        summarise(avgmaxQ = mean(max({{flow_var}})), na.rm = T) -> maxQ
-
-    #calculate daily average and convert to qmax proportion
-    df %>%
-        group_by({{day_var}}) %>%
-        summarise(avgQ = mean({{flow_var}}, na.rm = T)) -> dayQ
-
-    #calculate flow duration curves
-
-    #return data.frame with values
-}
-
-riverwave_plot <- function(df) {
-    ggplot(data = df, )
-}
-
-
 #' Get DOY Summary Stats Graph
 #'
 #' @param data A data.frame with date and flow columns.
@@ -36,7 +15,7 @@ riverwave_plot <- function(df) {
 riverwave_percentiles_plot <- function(data, value_name,q1, q2, q5,  wy_month = 10) {
 
 
-        ff_vals <- tibble(q1 = q1, q2 = q2, q5 = q5)
+        ff_vals <- dplyr::tibble(q1 = q1, q2 = q2, q5 = q5)
 
         data <- data %>% summary_stats_doy({{value_name}}, wy_month)
 
@@ -53,8 +32,8 @@ riverwave_percentiles_plot <- function(data, value_name,q1, q2, q5,  wy_month = 
                Percentiles = factor(Percentiles, levels = c('Lowest Flow', '10%', '25%', 'Median Flow', '75%', '95%'))) %>%
         ggplot2::ggplot() +
         ggplot2::geom_line(aes(wy_doy, value, group = Percentiles, color = Percentiles), size = 1.5) +
-        ggplot2::scale_color_manual(values = hcl.colors(n = 6, palette = 'Viridis'))  +
-        ggplot2::geom_line(data = data %>% filter(wy_doy < 366), aes(wy_doy,
+        ggplot2::scale_color_manual(values = grDevices::hcl.colors(n = 6, palette = 'Viridis'))  +
+        ggplot2::geom_line(data = data %>% dplyr::filter(wy_doy < 366), aes(wy_doy,
                                                                      {{value_name}},
                                                                      group = wy), alpha = 0.15, linewidth = 0.25) +
         geomtextpath::geom_labelhline(yintercept = ff_vals$q1, linetype = 3, label = paste0('Q1: ', round(ff_vals$q1, 2), ' (cms)'), fontface = 'bold') +
@@ -89,7 +68,7 @@ riverwave_rastergraph <- function(data, value_name, q1, q2, wy_month = 10) {
         }
 
 
-        ff_vals <- tibble(q1 = q1, q2 = q2)
+        ff_vals <- dplyr::tibble(q1 = q1, q2 = q2)
 
         data <- prep_flow(data, {{value_name}}, wy_month)
 
@@ -101,7 +80,7 @@ riverwave_rastergraph <- function(data, value_name, q1, q2, wy_month = 10) {
         dup_labels <- function(x) data$month_abb[match(x, data$wy_doy)]
 
         data %>%
-            mutate(cut_value = ifelse({{value_name}} < ff_vals$q1, 'Riverine Productivity',
+            dplyr::mutate(cut_value = ifelse({{value_name}} < ff_vals$q1, 'Riverine Productivity',
                                       ifelse({{value_name}} >= ff_vals$q1 & {{value_name}} < ff_vals$q2, 'River Continuum', 'Flood Pulse')),
                    cut_value = factor(cut_value, levels = c('Riverine Productivity', 'River Continuum', 'Flood Pulse'))) %>%
             ggplot2::ggplot(ggplot2::aes(wy_doy, wy)) +
@@ -184,7 +163,7 @@ riverwave_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
                       drape = raster::cut(data_mat_rast, colour_breaks))
 
 
-    ranges <- rgl:::.getRanges()
+    ranges <- getRanges()
 
     xlim <- ranges$xlim
 
@@ -233,4 +212,37 @@ riverwave_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
 
     rgl::view3d(...)
 
+}
+
+
+#' Get Ranges
+#' @description
+#' This function is taken from the rgl package due to it being non-exported.
+#'
+#' @param expand numeric
+#' @param ranges rgl par3d function.
+#'
+#' @return A range of x, y, and z values.
+getRanges <- function (expand = 1.03, ranges = rgl::par3d("bbox")) {
+    ranges <- list(xlim = ranges[1:2], ylim = ranges[3:4], zlim = ranges[5:6])
+    strut <- FALSE
+    ranges <- lapply(ranges, function(r) {
+        d <- diff(r)
+        if (d > 0)
+            return(r)
+        strut <<- TRUE
+        if (d < 0)
+            return(c(0, 1))
+        else if (r[1] == 0)
+            return(c(-1, 1))
+        else return(r[1] + 0.4 * abs(r[1]) * c(-1, 1))
+    })
+    ranges$strut <- strut
+    ranges$x <- (ranges$xlim - mean(ranges$xlim)) * expand +
+        mean(ranges$xlim)
+    ranges$y <- (ranges$ylim - mean(ranges$ylim)) * expand +
+        mean(ranges$ylim)
+    ranges$z <- (ranges$zlim - mean(ranges$zlim)) * expand +
+        mean(ranges$zlim)
+    ranges
 }

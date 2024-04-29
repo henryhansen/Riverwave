@@ -42,7 +42,7 @@ FF_LogNormal <- function(m, s, p) {
     cv <- s/m
 
     #calculate standard normal deviate
-    z <- qnorm(1 - p)
+    z <- stats::qnorm(1 - p)
 
     #calculate frequency factor for lognormal distribution
     kt <- (1/cv) * (exp(sqrt(log(1 + cv^2)) * z - 0.5 * log(1 + cv^2)) - 1)
@@ -81,10 +81,10 @@ prep_flow <- function(data, value_name = vattenforing_m3_s, wy_month = 10){
                                ifelse(doy >= month_to_doy(wy_month, leap = T),
                                       doy-month_to_doy(wy_month, leap = T)+1,
                                       (366-month_to_doy(wy_month, leap = T)+1+doy))),
-               month_day = str_c(month, day, sep = "-"),
+               month_day = stringr::str_c(month, day, sep = "-"),
                wy = waterYear(date, wy_month, TRUE),
                month_abb = factor(month.abb[month], levels = month.abb),
-               month_day = str_c(month, day, sep = "-")) %>%
+               month_day = stringr::str_c(month, day, sep = "-")) %>%
         add_proportion(value_name = {{value_name}})
 
 }
@@ -194,7 +194,7 @@ add_wave_proportions <- function(data, value_name, q1, q2, wy_month = 10) {
                cut_value = factor(cut_value, levels = c('Riverine Productivity', 'River Continuum', 'Flood Pulse'))) %>%
         dplyr::add_count() %>%
         dplyr::group_by(wy_doy, n) %>%
-        count(cut_value, .drop = FALSE, name = 'theory_count') %>%
+        dplyr::count(cut_value, .drop = FALSE, name = 'theory_count') %>%
         dplyr::mutate(proportions = theory_count/n)
 }
 
@@ -231,7 +231,7 @@ summary_stats_doy <- function(data, value_name, wy_month = 10) {
 
         data  %>%
         dplyr::group_by(wy_doy) %>%
-        dplyr::reframe(quantiles = quantile(vattenforing_m3_s,
+        dplyr::reframe(quantiles = stats::quantile(vattenforing_m3_s,
                                             probs = c(0,0.05, 0.1,
                                                       0.2,0.25, 0.5,
                                                       0.75,0.80, 0.90,
@@ -262,7 +262,7 @@ ff_vals <- function(data, value_name, wy_month = 10) {
         dplyr::reframe(peak_flow = max({{value_name}}, na.rm = T)) %>%
         dplyr::ungroup()  %>%
         dplyr::reframe(mean_q = mean(log(peak_flow), na.rm = T),
-                       sd_q = sd(log(peak_flow), na.rm = T))
+                       sd_q = stats::sd(log(peak_flow), na.rm = T))
     dplyr::tibble(
         q1 = exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.9)),
         q2 = exp(FF_LogNormal(data_peak$mean_q, data_peak$sd_q, 0.5)),
@@ -287,16 +287,16 @@ floowy <- function(data, value_name, wy_month = 10) {
                     dplyr::ungroup()
 }
 
-#' Title
+#' Exceedance Probabilities
+#' @description
+#' This function calculates exceedance probabilities using Gringorten plotting position formula.
 #'
-#' @param gaugedata
-#' @param discharge
-#' @param constant
+#' @param gaugedata data.frame with discharge column
+#' @param discharge A column with discharge data
+#' @param constant numeric. Gringorten plotting position formula
 #'
 #' @return exceedence table
 #' @export
-#'
-#' @examples
 #'
 
 excd <- function(gaugedata, discharge = "vattenforing_m3_s", constant = 0.3) {

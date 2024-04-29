@@ -51,7 +51,7 @@ raster_hydrograph <- function(data, value_name) {
                                     name = 'Day of Year',
                                     sec.axis = ggplot2::dup_axis(labels = dup_labels, name = NULL),
                                     expand = c(0,0)) +
-        ggplot2::scale_fill_gradientn(colors = hcl.colors(11, palette = 'Spectral'),
+        ggplot2::scale_fill_gradientn(colors = grDevices::hcl.colors(11, palette = 'Spectral'),
                                       labels = scales::comma,
                                       name = 'Discharge',
                                       trans = 'log') +
@@ -70,11 +70,9 @@ raster_hydrograph <- function(data, value_name) {
 
 #' Latitude Rastergraph
 #'
-#' @param data
+#' @param data A data.frame
 #'
 #' @return
-#' @export
-#'
 #' @note Very specific right now with what goes in because we need to join the station metadata latitudes.
 latitude_rastergraph <- function(data) {
 
@@ -113,7 +111,7 @@ latitude_rastergraph <- function(data) {
                 dplyr::mutate(id = dplyr::row_number()) %>%
                 dplyr::select(id, Stnno)
 
-    final_df <- final_df %>% left_join(final_df_levels, by = 'Stnno')
+    final_df <- final_df %>% dplyr::left_join(final_df_levels, by = 'Stnno')
 
     xbreaks <- final_df %>%
         dplyr::group_by(month) %>%
@@ -144,7 +142,7 @@ latitude_rastergraph <- function(data) {
                                     name = 'Day of Year',
                                     sec.axis = ggplot2::dup_axis(labels = dup_labels, name = NULL),
                                     expand = c(0,0)) +
-        ggplot2::scale_fill_gradientn(colors = hcl.colors(11, palette = 'Spectral'),
+        ggplot2::scale_fill_gradientn(colors = grDevices::hcl.colors(11, palette = 'Spectral'),
                                       labels = scales::comma,
                                       name = 'Proportion to Max Flow',
                                       trans = 'log') +
