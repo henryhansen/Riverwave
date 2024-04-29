@@ -1,7 +1,6 @@
 #' SMHI Gauge Inventory
 #'
 #' @return dataframe of gauge inventory
-#' @importFrom magrittr "%>%"
 #' @export
 #'
 #'
@@ -38,13 +37,11 @@ smhi_vatten_map <- function(smhi_vatten_inv){
 mapview::mapview(smhi_vatten_inv)
 
 }
-## now get data for stations
 
 
 #' Get SMHI Vatten
 #'
 #' @param stn_no Numeric. Station Number.
-#'
 #' @return A data.frame
 #' @export
 #' @examples
@@ -76,10 +73,9 @@ data <- data %>% dplyr::mutate(date = lubridate::as_date(date))
 }
 
 
-#' Title
+#' current dataframe
 #'
 #' @param inv dataframe of smhi inventory
-#'
 #' @return station numbers currently monitored
 #' @export
 #' @examples
@@ -93,7 +89,6 @@ smhi_vatten_current <- function(inv) {
 #' Get all data from SMHI Vatten
 #'
 #' @param stn_nos vector of Numeric. Station Number.
-#'
 #' @return A data.frame
 #' @export
 #' @examples
@@ -106,9 +101,8 @@ smhi_vatten_retrieve <- function(stn_nos){
 
 #' SMHI Natural Model
 #'
-#' @param subid Numeric. Station Number.
+#' @param stn_no subid Numeric. Station Number.
 #' @return dataframe of natural modeled data from 2010-10-01 to 2023-09-30.
-#' @importFrom magrittr "%>%"
 #' @export
 #'
 #'
@@ -140,7 +134,6 @@ smhi_vatten_natural <- function(stn_no){
 #'
 #' @param point A sf object.
 #' @return dataframe of natural modeled data from 2010-10-01 to 2023-09-30.
-#' @importFrom magrittr "%>%"
 #' @export
 #'
 #'

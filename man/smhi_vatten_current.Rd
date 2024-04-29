@@ -2,7 +2,7 @@
 % Please edit documentation in R/smhi_vatten.R
 \name{smhi_vatten_current}
 \alias{smhi_vatten_current}
-\title{Title}
+\title{current dataframe}
 \usage{
 smhi_vatten_current(inv)
 }
@@ -13,5 +13,5 @@ smhi_vatten_current(inv)
 station numbers currently monitored
 }
 \description{
-Title
+current dataframe
 }

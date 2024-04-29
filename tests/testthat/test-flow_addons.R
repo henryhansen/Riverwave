@@ -5,7 +5,7 @@ test_that("testing the flow_addons.R scripts", {
     stream_flow <- data.frame(flow = c(seq(30, 60), seq(60, 30, length.out = 60)))
     rbi <- stream_flow %>% get_rbi(flow)
 
-    testthat::expect_equal(round(rbi[,3], 3)$rbi, 0.015)
+    testthat::expect_equal(round(rbi, 3)$rbi, 0.015)
 
     # now with two stations and different flows
     stream_flow <- data.frame(flow = c(seq(30, 60), seq(60, 30, length.out = 60),
@@ -20,7 +20,7 @@ test_that("testing the flow_addons.R scripts", {
 
     rbi <- stream_flow %>% get_rbi(flow, station)
 
-    testthat::expect_equal(round(rbi[,4], 3)$rbi, c(0.112, 0.015))
+    testthat::expect_equal(round(rbi[,2], 3)$rbi, c(0.112, 0.015))
 
 
 

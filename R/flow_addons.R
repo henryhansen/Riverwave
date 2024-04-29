@@ -8,6 +8,7 @@
 #'
 #' @return A rbi column within data.frame.
 #' @note The user must specify the `flow_var` column but it's optional whether to use `dplyr::group_by()` or not.
+#' @importFrom dplyr "%>%"
 #' @export
 #'
 #' @examples

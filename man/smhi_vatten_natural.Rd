@@ -7,7 +7,7 @@
 smhi_vatten_natural(stn_no)
 }
 \arguments{
-\item{subid}{Numeric. Station Number.}
+\item{stn_no}{subid Numeric. Station Number.}
 }
 \value{
 dataframe of natural modeled data from 2010-10-01 to 2023-09-30.
