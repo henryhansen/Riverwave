@@ -35,10 +35,11 @@ Imports:
     magrittr,
     geomtextpath,
     ggfx,
-    raster,
     rasterVis,
     sf,
-    stringr
+    stringr,
+    terra,
+    lattice
 Suggest:
     ggfx
     magrittr,
