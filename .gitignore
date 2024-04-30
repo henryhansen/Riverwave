@@ -8,3 +8,4 @@ data
 other_documentation/
 data/
 vignettes/
+inst/doc

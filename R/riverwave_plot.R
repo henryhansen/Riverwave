@@ -247,6 +247,7 @@ getRanges <- function (expand = 1.03, ranges = rgl::par3d("bbox")) {
     ranges
 }
 
+<<<<<<< HEAD
 #' Plot 3D for RW
 #'
 #' @param x
@@ -264,6 +265,7 @@ getRanges <- function (expand = 1.03, ranges = rgl::par3d("bbox")) {
 #' @export
 #'
 #' @examples
+
 plot3D_rw <- function(x, maxpixels=1e5, zfac=1, drape=NULL,
          col=terrain.colors, at=100, rev=FALSE,
          useLegend=TRUE,
@@ -324,5 +326,30 @@ plot3D_rw <- function(x, maxpixels=1e5, zfac=1, drape=NULL,
             rgl::surface3d(X, Y, Z*zfac, color=color, back="lines")
         }
     } else stop("to use this function you need to install the 'rgl' package")
+}
+
+#' 2D plot of riverwave with breakpoints
+#' @description
+#' This plotting function returns a ggplot of daily discharge colored by riverwave breakpoints across time
+#' @param flowdata dataframe with discharge column, day of year column, year column
+#' @param doy day of year column pointer
+#' @param discharge discharge column pointer
+#' @param year year column pointer
+#' @param breakpoints a vector with 3 positions for gradient, 1st pos. is usually 1
+
+riverwave_2d <- function(flowdata, doy, discharge, year, breakpoints) {
+    ggplot2::ggplot(flowdata,
+            ggplot2::aes(x={{doy}},
+               y={{discharge}},
+               group={{year}},
+               color={{discharge}})) +
+        ggplot2::geom_line() +
+        ggplot2::scale_color_gradientn(colours = c("#33b544","#f5c01a","#ee3b27"),
+                              breaks = c(breakpoints[1],
+                                         breakpoints[2],
+                                         breakpoints[3]))+
+        ggplot2::labs(x = "Day of Year",
+             y = "Discharge",
+             color = "Discharge")
 }
 
