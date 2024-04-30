@@ -323,13 +323,23 @@ latitude_rastergraph(smhiDataClean) + theme(text = element_text(size = 12))
 
 index_test <- final_dataset[final_dataset$Stnno == 2139,]$index
 
-riverwave_3d(smhiDataClean[[as.character(index_test)]],
+devtools::document()
+
+riverwave_3d(data = smhiDataClean[[as.character(index_test)]],
              vattenforing_m3_s,
-             station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_oneyear_og,
-             station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_twoyear_og,
+             q1 = station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_oneyear_og,
+             q2 = station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_twoyear_og,
              userMatrix = um)
 
 
+riverwave_percentiles_plot()
+
+riverwave_percentiles_plot(smhiDataClean[[as.character(karlslund_index)]],
+                           vattenforing_m3_s,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_oneyear_og,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_twoyear_og,
+                           station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_fiveyear_og) +
+    theme_bw()
 
 ### just observing way it makes a difference between `natural_flow` and `regulated_flow`
 natural_flow_df <- read_csv('data/natural_flow_df.csv')
