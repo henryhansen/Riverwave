@@ -18,7 +18,28 @@ rw_plot3D(
 )
 }
 \arguments{
-\item{...}{}
+\item{x}{vectors of points to be plotted. Any reasonable way of defining the coordinates is acceptable. See the function xyz.coords for details.}
+
+\item{maxpixels}{A numeric.}
+
+\item{zfac}{A numeric.}
+
+\item{drape}{A logical}
+
+\item{col}{A vector of colors}
+
+\item{at}{A numeric}
+
+\item{rev}{A logical}
+
+\item{useLegend}{A logical}
+
+\item{adjust}{A logical}
+
+\item{...}{Arguments to pass to \link[rgl]{surface3d}.}
+}
+\value{
+A 3d riverwave plot.
 }
 \description{
 Plot 3D for RW

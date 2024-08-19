@@ -22,3 +22,16 @@ Prepping Flow Data
 \note{
 In data.frame or \code{tibble} `date` column must be named `date`.
 }
+\examples{
+stream_flow <- data.frame(flow = c(seq(30, 60), seq(60, 30, length.out = 60)),
+                          date = seq(as.Date('2012-01-01'), by = "day", length.out = 91))
+
+stream_flow_prepped <- prep_flow(stream_flow, value = flow, wy_month = 10)
+
+
+
+
+
+
+
+}
