@@ -22,6 +22,23 @@ test_that("testing the flow_addons.R scripts", {
 
     testthat::expect_equal(round(rbi[,2], 3)$rbi, c(0.112, 0.015))
 
+    #### test the `prep_flow()`
+    stream_flow <- data.frame(flow = c(seq(30, 60), seq(60, 30, length.out = 60)),
+                              date = seq(as.Date('2012-01-01'), by = "day", length.out = 91))
 
+    stream_flow_prepped <- prep_flow(stream_flow, value = flow, wy_month = 10)
+
+    testthat::expect_equal(stream_flow_prepped[1,]$date, as.Date('2012-01-01'))
+
+    testthat::expect_equal(stream_flow_prepped[1,]$wy, 2012)
+
+    # now test with different dates for water year (wy)
+
+    stream_flow <- data.frame(flow = c(seq(30, 60), seq(60, 30, length.out = 60)),
+                              date = seq(as.Date('2012-09-01'), by = "day", length.out = 91))
+
+    stream_flow_prepped <- prep_flow(stream_flow, value = flow, wy_month = 10)
+
+    testthat::expect_equal(stream_flow_prepped[31,]$wy, 2013)
 
 })
