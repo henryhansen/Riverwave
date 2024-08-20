@@ -243,7 +243,7 @@ summary_stats_doy <- function(data, value_name, wy_month = 10) {
 
         data  %>%
         dplyr::group_by(wy_doy) %>%
-        dplyr::reframe(quantiles = stats::quantile(vattenforing_m3_s,
+        dplyr::reframe(quantiles = stats::quantile({{value_name}},
                                             probs = c(0,0.05, 0.1,
                                                       0.2,0.25, 0.5,
                                                       0.75,0.80, 0.90,
@@ -329,9 +329,9 @@ excd <- function(gaugedata, discharge = "vattenforing_m3_s", constant = 0.3) {
         attr(df$ranks, "names") <- NULL
     } else {
         index <- df[discharge] == "Saknas" | is.na(df[discharge])
-        df[index, "vattenforing_m3_s"] <- NA
-        df$vattenforing_m3_s_d <- as.double(df$vattenforing_m3_s)
-        dis <- df$vattenforing_m3_s_d
+        df[index, discharge] <- NA
+        df[[discharge]] <- as.double(df[[discharge]])
+        dis <- df[[discharge]]
         dis <- dis * -1
         df$ranks <- rank(dis, na.last = F)
         attr(df$ranks, "names") <- NULL

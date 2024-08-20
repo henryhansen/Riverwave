@@ -135,7 +135,7 @@ rw_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
         # dplyr::group_by(wy) %>%
         # dplyr::slice(rep(1:dplyr::n(), each = 3)) %>%
         # dplyr::ungroup() %>%
-        dplyr::arrange(dplyr::desc(wy)) %>%
+        dplyr::arrange(wy) %>%
         dplyr::select(-wy)
 
     data_mat <- as.matrix(data_mat)
@@ -159,7 +159,7 @@ rw_3d <- function(data, value_name, q1, q2, wy_month = 10, ...) {
     colour_breaks <- c(0,q1,q2,max_all_time)
 
     rw_plot3D(data_mat_rast, col = myPal,
-                      drape = terra::classify(data_mat_rast, colour_breaks))
+                      drape = terra::classify(data_mat_rast, colour_breaks), ...)
 
 
     ranges <- getRanges()
@@ -355,7 +355,7 @@ rw_2d <- function(data, discharge, breakpoints, wy_month = 10) {
 #' Raster Hydrograph
 #'
 #' @param data A data.frame with date and flow columns.
-#' @param value_name The variable to include as the y-axis.
+#' @param value_name Unquoted variable to include as the y-axis.
 #' @param wy_month A numeric for what month to use as start of water year, 10 (default).
 #' @return A ggplot.
 #' @importFrom dplyr "%>%"
@@ -372,7 +372,7 @@ rw_2d <- function(data, discharge, breakpoints, wy_month = 10) {
 #'
 #' }
 #'
-rw_hydrograph <- function(data, value_name) {
+rw_hydrograph <- function(data, value_name, wy_month = 10) {
 
     if (!requireNamespace("ggfx")) {
 
@@ -386,7 +386,7 @@ rw_hydrograph <- function(data, value_name) {
 
 
     # prep for plotting
-    data <- data %>% prep_flow(wy_month = wy_month)
+    data <- data %>% prep_flow(value_name = {{value_name}}, wy_month = wy_month)
 
     xbreaks <- data %>%
         dplyr::group_by(month) %>%

@@ -41,4 +41,8 @@ test_that("testing the flow_addons.R scripts", {
 
     testthat::expect_equal(stream_flow_prepped[31,]$wy, 2013)
 
+    ss_doy <- summary_stats_doy(stream_flow, flow, wy_month = 10)
+
+    testthat::expect_equal(ss_doy[1,]$p0_va, 60)
+
 })

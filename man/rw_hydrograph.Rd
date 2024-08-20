@@ -4,12 +4,12 @@
 \alias{rw_hydrograph}
 \title{Raster Hydrograph}
 \usage{
-rw_hydrograph(data, value_name)
+rw_hydrograph(data, value_name, wy_month = 10)
 }
 \arguments{
 \item{data}{A data.frame with date and flow columns.}
 
-\item{value_name}{The variable to include as the y-axis.}
+\item{value_name}{Unquoted variable to include as the y-axis.}
 
 \item{wy_month}{A numeric for what month to use as start of water year, 10 (default).}
 }

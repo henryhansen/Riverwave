@@ -325,16 +325,16 @@ index_test <- final_dataset[final_dataset$Stnno == 2139,]$index
 
 devtools::document()
 
-riverwave_3d(data = smhiDataClean[[as.character(index_test)]],
+rw_3d(data = smhiDataClean[[as.character(index_test)]][1:5000,] %>% mutate(vattenforing_m3_s = vattenforing_m3_s*1000),
              vattenforing_m3_s,
              q1 = station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_oneyear_og,
              q2 = station_ffa_results[station_ffa_results$Stnno == index_test,]$ffa_twoyear_og,
-             userMatrix = um)
+             userMatrix = um, zfac = 0.2)
 
 
 riverwave_percentiles_plot()
 
-riverwave_percentiles_plot(smhiDataClean[[as.character(karlslund_index)]],
+riverwave_percentiles_plot(smhiDataClean[[as.character(karlslund_index)]][1:5000,],
                            vattenforing_m3_s,
                            station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_oneyear_og,
                            station_ffa_results[station_ffa_results$Stnno == karlslund_index,]$ffa_twoyear_og,
