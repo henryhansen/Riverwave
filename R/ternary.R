@@ -8,14 +8,13 @@
 #' @examples
 #'
 #'
-ternary <- function(data) {
+ternary <- function(data, coefv, rbi, bfi, lat, cat_size) {
     #scale all values between 0 and 1
-    data$coefv <- 1-scales::rescale(data$coefv)
-    data$rbi <- scales::rescale(data$rbi)
-    data$bfi <- 1-scales::rescale(data$bfi)
+    data$coefv <- 1-scales::rescale(data[,coefv])
+    data$rbi <- scales::rescale(data[,rbi])
+    data$bfi <- 1-scales::rescale(data[,bfi])
 
-
-    stndata <- c("coefv","bfi","rbi")
+    stndata <- c(coefv,bfi,rbi)
     labs <- c("Flood Timing", "Baseflow Stability", "Flashiness")
     nPoints <- nrow(data)
 
@@ -30,9 +29,9 @@ ternary <- function(data) {
                 clockwise = T)
 
     PlotTools::SpectrumLegend(palette = rowCol,
-                              legend = c(paste("Latitude:",round(max(data$latorder))),
+                              legend = c(paste("Latitude:",round(max(data[,lat]))),
                                          rep(" ",3),
-                                         paste("Latitude:",round(min(data$latorder)))),
+                                         paste("Latitude:",round(min(data[,lat])))),
                               "topright",
                               xpd = T,
                               inset = c(-0.1,0),
@@ -56,20 +55,18 @@ ternary <- function(data) {
            inset = c(-0.3,0),
            bty = "n")
 
-    data$latorder <- findInterval(data$lat, sort(data$lat))
-
     Ternary::TernaryPoints(data[,stndata],
                   pch = 21,
                   col = "black",
-                  bg = rowCol[data$latorder],
-                  cex = log10(as.numeric(data[,"Catchment_size"]))/scale)
+                  bg = rowCol[findInterval(data[,lat], sort(data[,lat]))],
+                  cex = log10(as.numeric(data[,cat_size]))/scale)
 
     # test dataset
     #test <- data.frame(coefv = rnorm(50, mean = 20),
     #                   rbi = runif(50, min = 0.001, max = 0.999),
     #                   bfi = runif(50, min = 0.001, max = 0.999),
     #                   latorder = runif(50, min = 45, max = 50),
-    #                   Catchment_size = rnorm(50, mean = 1000))
+    #                   Catchment_size = rexp(50, 0.0001))
 }
 
 
