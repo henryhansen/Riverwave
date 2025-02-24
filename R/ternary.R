@@ -2,10 +2,10 @@
 #'
 #' @param data
 #'
-#' @returns
+#' @returns a ternary plot with coefv, rbi, and bfi axes
 #' @export
 #'
-#' @examples
+#' @examples ternary(test)
 #'
 #'
 ternary <- function(data, coefv, rbi, bfi, lat, cat_size) {
@@ -62,7 +62,7 @@ ternary <- function(data, coefv, rbi, bfi, lat, cat_size) {
                   cex = log10(as.numeric(data[,cat_size]))/scale)
 
     # test dataset
-    #test <- data.frame(coefv = rnorm(50, mean = 20),
+    # test <- data.frame(coefv = rnorm(50, mean = 20),
     #                   rbi = runif(50, min = 0.001, max = 0.999),
     #                   bfi = runif(50, min = 0.001, max = 0.999),
     #                   latorder = runif(50, min = 45, max = 50),
