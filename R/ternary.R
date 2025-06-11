@@ -1,11 +1,14 @@
 #' ternary
 #'
-#' @param data
+#' @param data dataframe of measurements
+#' @param coefv coefficient of variation
+#' @param rbi richard baker index
+#' @param bfi baseflow index
+#' @param lat latitude
+#' @param cat_size catchment size
 #'
 #' @returns a ternary plot with coefv, rbi, and bfi axes
 #' @export
-#'
-#' @examples ternary(test)
 #'
 #'
 ternary <- function(data, coefv, rbi, bfi, lat, cat_size) {

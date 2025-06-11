@@ -21,9 +21,7 @@ Imports:
     httr,
     dplyr,
     jsonify,
-    geojsonio,
     mapview,
-    readxl,
     rlang,
     ggplot2,
     lubridate,
@@ -35,13 +33,11 @@ Imports:
     magrittr,
     geomtextpath,
     ggfx,
-    rasterVis,
     sf,
     stringr,
     terra,
     lattice,
     Ternary,
-    scales,
     PlotTools
 Suggest:
     ggfx

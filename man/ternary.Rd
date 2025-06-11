@@ -7,16 +7,19 @@
 ternary(data, coefv, rbi, bfi, lat, cat_size)
 }
 \arguments{
-\item{data}{}
+\item{data}{dataframe of measurements}
+
+\item{coefv}{coefficient of variation}
+
+\item{rbi}{richard baker index}
+
+\item{lat}{latitude}
+
+\item{cat_size}{catchment size}
 }
 \value{
 a ternary plot with coefv, rbi, and bfi axes
 }
 \description{
 ternary
-}
-\examples{
-ternary(test)
-
-
 }

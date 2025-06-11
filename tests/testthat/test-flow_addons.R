@@ -43,6 +43,6 @@ test_that("testing the flow_addons.R scripts", {
 
     ss_doy <- summary_stats_doy(stream_flow, flow, wy_month = 10)
 
-    testthat::expect_equal(ss_doy[1,]$p0_va, 60)
+    testthat::expect_equal(as.integer(ss_doy[1,]$p0_va), 60)
 
 })
